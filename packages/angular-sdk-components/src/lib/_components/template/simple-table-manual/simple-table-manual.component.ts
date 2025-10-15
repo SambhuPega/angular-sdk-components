@@ -921,7 +921,7 @@ export class SimpleTableManualComponent implements OnInit, OnDestroy {
     const refKeys: string[] = inColKey.split('.');
     let valBuilder = inRowData;
     for (const key of refKeys) {
-      valBuilder = valBuilder[key];
+      valBuilder = valBuilder ?? valBuilder[key];
     }
     return valBuilder;
   }
@@ -959,6 +959,7 @@ export class SimpleTableManualComponent implements OnInit, OnDestroy {
     if (this.allowEditingInModal && this.defaultView) {
       this.pConn$
         .getActionsApi()
+        // @ts-expect-error
         .openEmbeddedDataModal(
           this.defaultView,
           this.pConn$ as any,
@@ -980,6 +981,7 @@ export class SimpleTableManualComponent implements OnInit, OnDestroy {
     if (data) {
       this.pConn$
         .getActionsApi()
+        // @ts-expect-error
         .openEmbeddedDataModal(
           this.bUseSeparateViewForEdit ? this.editView : this.defaultView,
           this.pConn$ as any,

@@ -54,6 +54,8 @@ export class DataReferenceComponent implements OnInit, OnDestroy {
   showAdvancedSearch: boolean;
   pyID: any;
   allowImplicitRefresh: any;
+  displayChild = false;
+  dataRelationshipContext: any;
 
   constructor(
     private angularPConnect: AngularPConnectService,
@@ -135,6 +137,8 @@ export class DataReferenceComponent implements OnInit, OnDestroy {
     this.viewName = this.rawViewMetadata.name;
     this.firstChildMeta = this.rawViewMetadata.children[0];
     this.refList = this.rawViewMetadata.config.referenceList;
+    this.dataRelationshipContext =
+      this.rawViewMetadata.config.contextClass && this.rawViewMetadata.config.name ? this.rawViewMetadata.config.name : null;
     this.canBeChangedInReviewMode = theConfigProps.allowAndPersistChangesInReviewMode && (displayAs === 'autocomplete' || displayAs === 'dropdown');
     // this.childrenToRender = this.children;
     this.isDisplayModeEnabled = ['DISPLAY_ONLY', 'STACKED_LARGE_VAL'].includes(displayMode);
@@ -177,6 +181,7 @@ export class DataReferenceComponent implements OnInit, OnDestroy {
       }
 
       this.generateChildrenToRender();
+      this.displayChild = !(this.displaySingleRef || this.displayMultiRef);
     }
   }
 
@@ -228,8 +233,8 @@ export class DataReferenceComponent implements OnInit, OnDestroy {
     const caseKey = this.pConn$.getCaseInfo().getKey();
     const refreshOptions: any = { autoDetectRefresh: true, propertyName: '' };
 
-    if (this.pConn$?.getRawMetadata()?.children?.length > 0 && this.pConn$?.getRawMetadata()?.children[0].config?.value) {
-      refreshOptions.propertyName = this.pConn$?.getRawMetadata()?.children[0].config.value;
+    if ((this.pConn$?.getRawMetadata()?.children as any)?.length > 0 && this.pConn$?.getRawMetadata()?.children?.[0].config?.value) {
+      refreshOptions.propertyName = this.pConn$?.getRawMetadata()?.children?.[0].config.value;
       refreshOptions.classID = (this.pConn$.getRawMetadata() as any).classID;
     }
 
